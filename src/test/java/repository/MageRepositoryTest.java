@@ -14,18 +14,17 @@ public class MageRepositoryTest {
     @Test
     public void delete_NullObject_ShouldThrowIllegalArgumentException()
     {
-        MageRepository mc=new MageRepository(new ArrayList<Mage>());
+        MageRepository mc=new MageRepository(new ArrayList<>());
 
-        assertThatThrownBy(() -> {
-            mc.delete("Jan");
-        }).isInstanceOf(IllegalArgumentException.class)
+        assertThatThrownBy(() -> mc.delete("Jan"))
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Bad name request");
     }
 
     @Test
     public void find_NullObject_ShouldReturnEmptyOptionalObject()
     {
-        MageRepository mc=new MageRepository(new ArrayList<Mage>());
+        MageRepository mc=new MageRepository(new ArrayList<>());
 
         Optional<Mage> m=mc.find("");
 
@@ -35,7 +34,7 @@ public class MageRepositoryTest {
     @Test
     public void find_NotNullObject_ShouldReturnOptionalObjectWithContent()
     {
-        MageRepository mc=new MageRepository(new ArrayList<Mage>());
+        MageRepository mc=new MageRepository(new ArrayList<>());
         Mage m =Mage.builder()
                 .name("Jan")
                 .level(12)
@@ -46,5 +45,27 @@ public class MageRepositoryTest {
         Optional<Mage> mFound=mc.find("Jan");
 
         assertThat(mFound.get()).isEqualTo(m);
+    }
+
+    @Test
+    public void save_SameNameObjectTwice_ShouldReturnOptionalObjectWithContent()
+    {
+        MageRepository mc=new MageRepository(new ArrayList<>());
+
+        Mage m =Mage.builder()
+                .name("Jan")
+                .level(12)
+                .build();
+
+        Mage m1 =Mage.builder()
+                .name("Jan")
+                .level(43)
+                .build();
+
+        mc.save(m);
+
+        assertThatThrownBy(() -> mc.save(m1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Mage already exists");
     }
 }

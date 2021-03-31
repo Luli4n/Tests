@@ -30,7 +30,10 @@ public class MageController {
 
     public String save(String name, String level) {
         try {
-            repository.save(Mage.builder().name(name).level(parseInt(level)).build());
+            repository.save(Mage.builder()
+                    .name(name)
+                    .level(parseInt(level))
+                    .build());
         } catch (IllegalArgumentException e) {
             return "bad request";
         }

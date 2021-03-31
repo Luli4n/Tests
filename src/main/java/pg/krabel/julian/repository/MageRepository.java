@@ -50,9 +50,9 @@ public class MageRepository {
     }
     public void save(Mage mage) {
 
-        if(collection.contains(mage))
+        if(collection.stream().anyMatch(mage1 -> mage1.getName().equals(mage.getName())))
         {
-            throw new IllegalStateException("Mage already exists");
+            throw new IllegalArgumentException("Mage already exists");
         }
         else
         {
